@@ -1,0 +1,17 @@
+{
+  "name": "satranc",
+  "version": "1.0.0",
+  "description": "Node.js ile satranç yazmak serisinin projesi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "satranc",
+    "chess",
+    "avarekodcu",
+    "game",
+    "oyun"
+  ],
+  "author": "Avare Kodcu <abdurrahmaneker58@gmail.com>"
+}
