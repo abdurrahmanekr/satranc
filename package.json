@@ -1,7 +1,7 @@
 {
   "name": "satranc",
-  "version": "1.0.0",
-  "description": "Node.js ile satranç yazmak serisinin projesi",
+  "version": "1.0.1",
+  "description": "Node.js ile oyun yazmak serisinin projesi",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
