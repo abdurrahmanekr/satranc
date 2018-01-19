@@ -13,5 +13,9 @@
     "game",
     "oyun"
   ],
-  "author": "Avare Kodcu <abdurrahmaneker58@gmail.com>"
+  "author": "Avare Kodcu <abdurrahmaneker58@gmail.com>",
+  "devDependencies": {
+    "express": "^4.16.2",
+    "express-session": "^1.15.6"
+  }
 }
