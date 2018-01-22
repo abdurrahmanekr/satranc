@@ -1,16 +1,20 @@
 const session = require('express-session');
+const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 
 module.exports = (app) => {
-    // oturum modeli
+
+    const client = redis.createClient();
+
     app.use(session({
-        store: new RedisStore({ // yeni bir redis bağlantısı
+        store: new RedisStore({
+            client: client,
             host: 'localhost',
             port: 6379,
-            ttl :  260
+            ttl: 260,
         }),
-        secret: "gizli-anahtar",
+        secret: 'gizli-anahtar',
         resave: false,
         saveUninitialized: true,
-    }));
-};
+    }))
+}
