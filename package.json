@@ -4,7 +4,8 @@
   "description": "Node.js ile oyun yazmak serisinin projesi",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:server": "node server/index.js"
   },
   "keywords": [
     "satranc",
@@ -18,6 +19,7 @@
     "connect-redis": "^3.3.3",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "pg": "^7.4.1",
     "redis": "^2.8.0"
   }
 }

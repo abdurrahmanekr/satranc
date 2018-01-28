@@ -1,5 +1,6 @@
 const express = require('express');
 const uses = require('./uses');
+const database = require('./database');
 
 // sunucumu oluşturalım
 const app = express();
@@ -9,7 +10,12 @@ const port = 3000;
 
 
 app.get('/', (req, res) => {
-    res.send(req.session);
+    database.select()
+    .then(data => {
+        res.send(data);
+    }, err => {
+        res.send(err);
+    })
 })
 
 app.listen(port, () => {
