@@ -2,6 +2,8 @@ const session = require('express-session');
 const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 const database = require('./database');
+const routes = require('./api/routes');
+const bodyParser = require('body-parser');
 
 module.exports = (app) => {
 
@@ -19,4 +21,14 @@ module.exports = (app) => {
         resave: false,
         saveUninitialized: true,
     }))
+
+    app.use(bodyParser.json());
+
+    for(var key in routes.post) {
+        app.use(key, routes.post[key]);
+    }
+
+    for(var key in routes.get) {
+        app.use(key, routes.get[key]);
+    }
 }

@@ -17,16 +17,8 @@ class Database {
         return this.client.connect();
     }
 
-    select() {
-        return new Promise((resolve, reject) => {
-            this.client.query('SELECT RTRIM(name) as name, RTRIM(email) as email, date FROM users', (err, res) => {
-                if (err !== null) {
-                    reject(err)
-                } else {
-                    resolve(res.rows);
-                }
-            })
-        })
+    execute(...args) {
+        this.client.query(...args);
     }
 }
 

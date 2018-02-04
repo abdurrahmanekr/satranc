@@ -16,6 +16,7 @@
   ],
   "author": "Avare Kodcu <abdurrahmaneker58@gmail.com>",
   "devDependencies": {
+    "body-parser": "^1.18.2",
     "connect-redis": "^3.3.3",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
