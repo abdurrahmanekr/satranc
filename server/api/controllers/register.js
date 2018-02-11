@@ -22,11 +22,11 @@ module.exports = (request, response) => {
 					response.send('');
 				}, err => {
 					response.status(500);
-					response.send('');
+					response.send(err.message);
 				})				
 			}, err => {
 				response.status(500);
-				response.send('');
+				response.send(err.message);
 			})
 			break;
 		default: 

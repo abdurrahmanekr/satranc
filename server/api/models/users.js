@@ -1,27 +1,47 @@
 const database = require('../../database');
+const sm = require('sqlmaster');
+
+const UserPassword = require('./userPassword');
 
 class Users {
 	insert(user) {
-		var sql = "INSERT INTO users (name, email, date) VALUES ($1, $2, NOW())";
-		var values = [user.name, user.email];
+        var query = sm
+        .from('users')
+        .insert({
+            name: user.name,
+            email: user.email,
+            date: new Date(),
+        })
+        .returning('id')
+        .exec();
 
 		return new Promise((resolve, reject) => {
-			database.execute(sql, values, (err, res) => {
+			database.execute(query, (err, res) => {
 				if (err !== null) {
 					reject(err)
 				} else {
-					resolve(true);
+                    UserPassword.insert(res.rows[0].id, user.password).then(res => {
+                        resolve(true);
+                    }, reject);
 				}
 			})
 		})
 	}
 
 	isExist(email) {
-		var sql = "SELECT email FROM users WHERE email = $1";
-		var values = [email];
+        var query = sm
+        .from('users')
+        .where('email = :email', {
+            ':email': email
+        })
+        .select([
+            "email"
+        ])
+        .exec();
+
 
 		return new Promise((resolve, reject) => {
-			database.execute(sql, values, (err, res) => {
+			database.execute(query, (err, res) => {
 				if (err !== null) {
 					reject(err)
 				} else {

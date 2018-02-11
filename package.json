@@ -15,7 +15,8 @@
     "oyun"
   ],
   "author": "Avare Kodcu <abdurrahmaneker58@gmail.com>",
-  "devDependencies": {
+  "dependencies": {
+    "sqlmaster": "^1.1.3",
     "body-parser": "^1.18.2",
     "connect-redis": "^3.3.3",
     "express": "^4.16.2",
