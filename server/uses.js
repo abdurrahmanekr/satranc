@@ -4,6 +4,8 @@ const RedisStore = require('connect-redis')(session);
 const database = require('./database');
 const routes = require('./api/routes');
 const bodyParser = require('body-parser');
+const socket = require('socket.io');
+const Connector = require('./socket');
 
 module.exports = (app) => {
 
@@ -31,4 +33,6 @@ module.exports = (app) => {
     for(var key in routes.get) {
         app.use(key, routes.get[key]);
     }
+
+    Connector.init(socket(3001));
 }
