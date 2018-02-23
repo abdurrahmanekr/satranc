@@ -6,13 +6,14 @@ const routes = require('./api/routes');
 const bodyParser = require('body-parser');
 const socket = require('socket.io');
 const Connector = require('./socket');
+const sharedsession = require("express-socket.io-session");
 
 module.exports = (app) => {
 
-    const client = redis.createClient();
     database.connect();
-
-    app.use(session({
+    
+    const client = redis.createClient();
+    const session1 = session({
         store: new RedisStore({
             client: client,
             host: 'localhost',
@@ -20,9 +21,11 @@ module.exports = (app) => {
             ttl: 260,
         }),
         secret: 'gizli-anahtar',
-        resave: false,
+        resave: true,
         saveUninitialized: true,
-    }))
+    });
+
+    app.use(session1);
 
     app.use(bodyParser.json());
 
@@ -34,5 +37,17 @@ module.exports = (app) => {
         app.use(key, routes.get[key]);
     }
 
-    Connector.init(socket(3001));
+    const server = require("http").createServer(app);
+    server.listen({
+        port: 3000,
+        host: '127.0.0.1',
+    }, () => {
+        console.log('çalışıyor');
+    });
+    const io = socket(server);
+    io.use(sharedsession(session1, {
+        autoSave: true
+    }));
+
+    Connector.init(io);
 }

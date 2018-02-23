@@ -7,6 +7,6 @@ uses(app);
 // yayınlayacağım port
 const port = 3000;
 
-app.listen(port, () => {
-    console.log('çalışıyor');
-})
+// app.listen(port, () => {
+//     console.log('çalışıyor');
+// })
