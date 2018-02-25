@@ -23,13 +23,13 @@ module.exports = (request, response) => {
 				}, err => {
 					response.status(500);
 					response.send(err.message);
-				})				
+				})
 			}, err => {
 				response.status(500);
 				response.send(err.message);
 			})
 			break;
-		default: 
+		default:
 			response.status(400);
 			response.send('');
 			break;

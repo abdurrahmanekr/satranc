@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Socket Test</title>
+</head>
+<body>
+    <div id="result">Bağlantı Yok</div>
+
+    <button onclick="gonder()">Gönder</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.slim.js"></script>
+    <script>
+        var socket = io('http://localhost:3000');
+        socket.on('connect', function () {
+            document.getElementById('result').innerHTML = 'Bağlandı';
+        })
+
+        function gonder() {
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    console.log(this.responseText);
+                }
+            });
+
+            xhr.open("POST", "http://localhost:3000/v1/game?event=new");
+            xhr.setRequestHeader("content-type", "application/json");
+            xhr.send();
+        }
+    </script>
+</body>
+</html>

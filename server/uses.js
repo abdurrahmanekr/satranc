@@ -4,14 +4,15 @@ const RedisStore = require('connect-redis')(session);
 const database = require('./database');
 const routes = require('./api/routes');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const socket = require('socket.io');
 const Connector = require('./socket');
-const sharedsession = require("express-socket.io-session");
+const http = require('http');
 
 module.exports = (app) => {
 
     database.connect();
-    
+
     const client = redis.createClient();
     const session1 = session({
         store: new RedisStore({
@@ -20,6 +21,7 @@ module.exports = (app) => {
             port: 6379,
             ttl: 260,
         }),
+        name: 'satranc.sid',
         secret: 'gizli-anahtar',
         resave: true,
         saveUninitialized: true,
@@ -28,26 +30,29 @@ module.exports = (app) => {
     app.use(session1);
 
     app.use(bodyParser.json());
+    app.use(cookieParser());
 
     for(var key in routes.post) {
-        app.use(key, routes.post[key]);
+        app.post(key, routes.post[key]);
     }
 
     for(var key in routes.get) {
-        app.use(key, routes.get[key]);
+        app.get(key, routes.get[key]);
     }
 
-    const server = require("http").createServer(app);
+    for(var key in routes.use) {
+        app.use(key, routes.use[key]);
+    }
+
+    const server = http.createServer(app);
+    const io = socket(server);
+
     server.listen({
         port: 3000,
-        host: '127.0.0.1',
+        host: 'localhost',
     }, () => {
         console.log('çalışıyor');
     });
-    const io = socket(server);
-    io.use(sharedsession(session1, {
-        autoSave: true
-    }));
 
     Connector.init(io);
 }

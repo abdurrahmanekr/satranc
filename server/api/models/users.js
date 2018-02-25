@@ -4,7 +4,7 @@ const sm = require('sqlmaster');
 const UserPassword = require('./userPassword');
 
 class Users {
-	insert(user) {
+    insert(user) {
         var query = sm
         .from('users')
         .insert({
@@ -15,43 +15,58 @@ class Users {
         .returning('id')
         .exec();
 
-		return new Promise((resolve, reject) => {
-			database.execute(query, (err, res) => {
-				if (err !== null) {
-					reject(err)
-				} else {
+        return new Promise((resolve, reject) => {
+            database.execute(query, (err, res) => {
+                if (err !== null) {
+                    reject(err)
+                } else {
                     UserPassword.insert(res.rows[0].id, user.password).then(res => {
                         resolve(true);
                     }, reject);
-				}
-			})
-		})
-	}
-
-	isExist(email) {
-        var query = sm
-        .from('users')
-        .where('email = :email', {
-            ':email': email
+                }
+            })
         })
+    }
+
+    isExist(email, password) {
+        var query = sm
+        .from('users');
+
+        if (password) {
+            query
+            .join('user_password', [
+                { id: 'id' },
+            ])
+            .where('email = :email AND password = :password', {
+                ':email': email,
+                ':password': UserPassword.crypto(password),
+            })
+        } else {
+            query
+            .where('email = :email', {
+                ':email': email
+            })
+        }
+
+        query = query
         .select([
-            "email"
+            "email",
+            ["password", "user_password.password"]
         ])
         .exec();
 
-
-		return new Promise((resolve, reject) => {
-			database.execute(query, (err, res) => {
-				if (err !== null) {
-					reject(err)
-				} else {
-					if (res.rows.length > 0)
-						return resolve(true); // kullanıcı var
-					return resolve(false); // kullanıcı eklenmemiş
-				}
-			})
-		})
-	}
+        return new Promise((resolve, reject) => {
+            database.execute(query, (err, res) => {
+                if (err !== null) {
+                    reject(err)
+                } else {
+                    if (res.rows.length > 0)
+                        return resolve(true); // kullanıcı var
+                    return resolve(false); // kullanıcı eklenmemiş
+                }
+            })
+        })
+    }
 }
 
 module.exports = new Users();

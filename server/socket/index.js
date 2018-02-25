@@ -1,3 +1,5 @@
+const Wildemitter = require('wildemitter');
+
 class Connector {
     constructor() {
         this.io = null;
@@ -14,13 +16,10 @@ class Connector {
             socket.on('disconnect', () => {
                 console.log('bir kullanıcı koptu');
             })
-
-            socket.on('getSession', () => {
-                socket.emit('onSession', socket.handshake.session);
-                socket.handshake.session.lastActiveData = new Date();
-            })
         })
     }
 }
+
+Wildemitter.mixin(Connector);
 
 module.exports = new Connector();
