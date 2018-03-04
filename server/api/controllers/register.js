@@ -8,7 +8,7 @@ module.exports = (request, response) => {
 			var user = request.body || {};
 
 			Users.isExist(user.email).then(exist => {
-				if (exist === true) {
+				if (exist !== false) {
 					response.status(200);
 					response.send({
 						error_code: 1,

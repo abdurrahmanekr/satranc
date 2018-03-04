@@ -50,8 +50,8 @@ class Users {
 
         query = query
         .select([
+            ["id", "users.id"],
             "email",
-            ["password", "user_password.password"]
         ])
         .exec();
 
@@ -61,7 +61,7 @@ class Users {
                     reject(err)
                 } else {
                     if (res.rows.length > 0)
-                        return resolve(true); // kullanıcı var
+                        return resolve(res.rows[0]); // kullanıcı var
                     return resolve(false); // kullanıcı eklenmemiş
                 }
             })

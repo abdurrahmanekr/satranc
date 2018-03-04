@@ -8,6 +8,14 @@ const cookieParser = require('cookie-parser');
 const socket = require('socket.io');
 const Connector = require('./socket');
 const http = require('http');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const GoogleStrategy = require('passport-google-oauth2');
+const config = require('./config');
+
+const {
+    Users,
+} = require('./api/models');
 
 module.exports = (app) => {
 
@@ -31,6 +39,40 @@ module.exports = (app) => {
 
     app.use(bodyParser.json());
     app.use(cookieParser());
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    passport.serializeUser((user, done) => {
+        done(null, user);
+    });
+
+    passport.deserializeUser((obj, done) => {
+        done(null, obj);
+    });
+
+    passport.use(
+        new LocalStrategy((username, password, done) => {
+            Users.isExist(username, password).then(exist => {
+                if (exist !== false) return done(null, exist);
+                done(null, false);
+            }, err => {
+                done(err);
+            })
+        })
+    );
+
+    passport.use(
+        new GoogleStrategy({
+            clientID: config.google.GOOGLE_CLIENT_ID,
+            clientSecret: config.google.GOOGLE_CLIENT_SECRET,
+            callbackURL: "/v1/auth/callback/google"
+        },
+        (accessToken, refreshToken, profile, cb) => {
+            console.log(JSON.stringify(profile));
+            cb(null, profile);
+        }
+    ));
 
     for(var key in routes.post) {
         app.post(key, routes.post[key]);

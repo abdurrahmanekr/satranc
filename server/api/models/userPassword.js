@@ -3,13 +3,17 @@ const sm = require('sqlmaster');
 const crypto = require('crypto');
 
 class UserPassword {
+    crypto(text) {
+        return crypto.pbkdf2Sync(text, 'satranc', 100000, 64, 'sha512').toString('hex');
+    }
+
     insert(id, password) {
         return new Promise((resolve, reject) => {
             if (!password) {
                 reject(new Error('password is null'));
             }
 
-            password = crypto.pbkdf2Sync(password, 'satranc', 100000, 64, 'sha512').toString('hex');
+            password = this.crypto(password);
 
             var query = sm
             .from('user_password')
